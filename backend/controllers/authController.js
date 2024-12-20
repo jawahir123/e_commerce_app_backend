@@ -1,27 +1,57 @@
 // impelement here login, register, password reset
-import User from "../models/userModel";
+import User from "../models/userModel.js";
+import jwt from 'jsonwebtoken'
+
+const generateToken = (id, role) => {
+   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+     expiresIn: '1d',
+   });
+ };
 
 export const registerUser =async(req,res)=>{
-   const {name,email,password,role}=req.body
+   const {firstName,lastName,email,password,role}= req.body
 
-   const existUser=User.findOne({email})
+   const existUser=await User.findOne({email})
    if(existUser){
-      res.status(403)
-      throw new Error("This User already exist")
+      return res.status(403).json({ message: "This user already exists" });
    }
 
-   const user=User.create({name,email,password,role})
-   if(user){
-      res.status(201).json({
-         id:user.id,
-         name:user.name,
-         email:user.email,
-         password:user.password,
-         role: user.role
-      })
-   }else{
-      res.status(401)
-      console.log("invalid data")
+   const user=await User.create({firstName,lastName,email,password,role})
+
+   res.status(201).json({
+      token: generateToken(user._id, user.role),
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        password:user.password,
+        role: user.role,
+      },
+    });
+
+}
+
+//login
+export const login =async (req,res)=>{
+   const {email,password}= req.body
+
+   const user=await User.findOne({email})
+   const ismatch =await user.comparePassword(password);
+
+   if(!ismatch){
+      return res.status(401).json({message:"invalid email or password"})
    }
 
+   res.json({
+      token: generateToken(user._id, user.role),
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+      },
+    });
+   
 }
