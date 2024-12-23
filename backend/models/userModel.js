@@ -2,13 +2,10 @@ import mongoose from 'mongoose'
 import bcrypt from'bcrypt'
 
 const userSchema=mongoose.Schema({
-   firstName: {
+   fullname: {
       type: String,
-      required: true
-   },
-   lastName: {
-      type: String,
-      required: true
+      required: true,
+      trim: true
    },
    email:{
       type: String,
@@ -33,7 +30,7 @@ const userSchema=mongoose.Schema({
       type:Date
    }
 
-});
+}, { timestamps: true });
 
 userSchema.pre("save",async function(next){
    if(!this.isModified("password")){
