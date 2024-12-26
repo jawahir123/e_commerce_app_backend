@@ -4,10 +4,10 @@ import { createProduct, getAllProducts, getProductById, updateProduct, deletePro
 const router = express.Router();
 
 // Route to create a new product
-router.post('/', createProduct); // POST /api/products
+router.post('/create', createProduct); // POST /api/products
 
 // Route to get all products
-router.get('/', getAllProducts); // GET /api/products
+router.get('/getAll', getAllProducts); // GET /api/products
 
 // Route to get a single product by ID
 router.get('/:id', getProductById); // GET /api/products/:id
