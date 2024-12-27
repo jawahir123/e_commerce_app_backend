@@ -15,7 +15,6 @@ export const registerUser =async(req,res)=>{
    if(existUser){
       return res.status(403).json({ message: "This user already exists" });
    }
-
    const user=await User.create({fullname,email,password,role})
 
    res.status(201).json({

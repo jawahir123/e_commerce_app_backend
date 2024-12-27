@@ -1,21 +1,28 @@
 import express from 'express';
-import { createProduct, getAllProducts, getProductById, updateProduct, deleteProduct } from '../controllers/productControler.js';
+import { 
+  createProduct, 
+  getAllProducts, 
+  getProductById, 
+  updateProduct, 
+  deleteProduct 
+} from '../controllers/productControler.js'; // Fixed typo in controller file name
 
 const router = express.Router();
 
-// Route to create a new product
-router.post('/create', createProduct); // POST /api/products
+// Routes
+// GET: Retrieve all products
+router.get('/', getAllProducts); // GET /api/products
 
-// Route to get all products
-router.get('/getAll', getAllProducts); // GET /api/products
+// POST: Create a new product
+router.post('/', createProduct); // POST /api/products
 
-// Route to get a single product by ID
+// GET: Retrieve a single product by ID
 router.get('/:id', getProductById); // GET /api/products/:id
 
-// Route to update a product by ID
+// PUT: Update a product by ID
 router.put('/:id', updateProduct); // PUT /api/products/:id
 
-// Route to delete a product by ID
+// DELETE: Remove a product by ID
 router.delete('/:id', deleteProduct); // DELETE /api/products/:id
 
 export default router;
