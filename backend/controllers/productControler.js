@@ -1,5 +1,5 @@
 import Product from '../models/productModel.js';
-
+import mongoose from 'mongoose';
 // Helper function for finding a product by ID
 const findProductById = async (id, res) => {
   try {
@@ -33,18 +33,34 @@ export const createProduct = async (req, res) => {
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
-
-// READ: Get all products
-export const getAllProducts = async (req, res) => {
+// READ: Get all products by category
+export const getProductsByCategory = async (req, res) => {
   try {
-    // Fetch all products and populate the category field
-    const products = await Product.find().populate('category');
-    res.status(200).json({ message: 'Products retrieved successfully', products });
+    // Get the category from the route parameter
+    const categoryId = req.params.category;
+
+    // Check if the categoryId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(400).json({ error: 'Invalid category ID' });
+    }
+
+    // Find products by category
+    const products = await Product.find({ category: categoryId });
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: 'No products found for this category' });
+    }
+
+    return res.status(200).json({
+      products,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    return res.status(400).json({
+      error: error.message,
+    });
   }
 };
+
 
 // READ: Get a single product by ID
 export const getProductById = async (req, res) => {

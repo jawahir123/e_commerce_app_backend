@@ -1,7 +1,7 @@
 import express from 'express';
 import { 
   createProduct, 
-  getAllProducts, 
+  getProductsByCategory ,
   getProductById, 
   updateProduct, 
   deleteProduct 
@@ -10,8 +10,8 @@ import {
 const router = express.Router();
 
 // Routes
-// GET: Retrieve all products
-router.get('/', getAllProducts); // GET /api/products
+// Route to get products by category (e.g., /products/mobile)
+router.get('/:category', getProductsByCategory);
 
 // POST: Create a new product
 router.post('/', createProduct); // POST /api/products
